@@ -7,7 +7,7 @@ import (
 
 func main() {
 	casterAddr := "http://rtn.dot.ny.gov:8082"
-	mountPoint := "NYGC"
+	mountPoint := "NJI2"
 	user := "evelyn"
 	pwd := "checkmate"
 

@@ -65,6 +65,7 @@ func ReadNmea(isConnected <-chan bool) {
 			if s.DataType() == nmea.TypeGGA {
 				m := s.(nmea.GGA)
 				fmt.Printf("Time: %s\n", m.Time)
+				fmt.Printf("Fix Quality: %s\n", m.FixQuality)
 				fmt.Printf("Longitude GPS: %s\n", nmea.FormatGPS(m.Longitude))
 				fmt.Printf("Longitude DMS: %s\n", nmea.FormatDMS(m.Longitude))
 				fmt.Printf("Latitude GPS: %s\n", nmea.FormatGPS(m.Latitude))

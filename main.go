@@ -11,8 +11,8 @@ func main() {
 	user := "evelyn"
 	pwd := "checkmate"
 
-	isStalled := make(chan bool)
+	isConnected := make(chan bool)
 
-	go ntrip_receiver.Receive(casterAddr, mountPoint, user, pwd, isStalled)
-	parser.ReadNmea(isStalled)
+	go ntrip_receiver.Receive(casterAddr, mountPoint, user, pwd, isConnected)
+	parser.ReadNmea(isConnected)
 }

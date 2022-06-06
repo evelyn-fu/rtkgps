@@ -65,8 +65,7 @@ func GetStream(c *ntrip.Client, mountPoint string, maxAttempts int) (io.ReadClos
 }
 
 // Connects to ntrip client and reads stream for specific mountpoint
-func Receive(casterAddr string, mountPoint string, user string, pwd string, isStalled chan<- bool) {
-	isStalled <- true
+func Receive(casterAddr string, mountPoint string, user string, pwd string, isConnected chan<- bool ) {
     c, err := Connect(casterAddr, user, pwd, 10)
     defer c.CloseIdleConnections()
 
@@ -96,28 +95,23 @@ func Receive(casterAddr string, mountPoint string, user string, pwd string, isSt
 
 	r := io.TeeReader(rc, w)
 	scanner := rtcm3.NewScanner(r)
-	isStalled <- false
+	isConnected <- true
 
-	fmt.Print("Stream: ")
 	for err == nil {
 		msg, err := scanner.NextMessage()
 		if err != nil {
 			if msg == nil {
-				isStalled <- true
 				fmt.Println("No message... reconnecting to stream...")
 				rc, err = GetStream(c, mountPoint, 10)
 				defer rc.Close()
 
 				r = io.TeeReader(rc, w)
 				scanner = rtcm3.NewScanner(r)
-				isStalled <- false
 				continue
 			}
 			log.Fatal(err, msg)
 		}
-	
-		// fmt.Printf("%T\t", msg)
-		// fmt.Println(msg)
+		isConnected <- true
 	}
 
 }
